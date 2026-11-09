@@ -86,6 +86,9 @@ else:
         }
     }
 
+# Modelo de usuário próprio (precisa estar definido antes da primeira migração).
+AUTH_USER_MODEL = "financeiro.Usuario"
+
 # Senhas: hash Argon2 e mínimo de 10 caracteres (RNF01).
 PASSWORD_HASHERS = [
     "django.contrib.auth.hashers.Argon2PasswordHasher",
