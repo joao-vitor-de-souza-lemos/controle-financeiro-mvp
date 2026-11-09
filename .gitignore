@@ -1,0 +1,21 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Django
+db.sqlite3
+staticfiles/
+media/
+*.log
+
+# Segredos e configuração local (nunca versionar)
+.env
+
+# Editores
+.idea/
+.vscode/
