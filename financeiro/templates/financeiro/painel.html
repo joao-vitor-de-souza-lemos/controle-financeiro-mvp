@@ -1,0 +1,44 @@
+{% extends "financeiro/base.html" %}
+{% block titulo %}Painel | Controle Financeiro{% endblock %}
+{% block conteudo %}
+<h1>Olá, {{ request.user.nome|default:request.user.username }}</h1>
+<p class="ajuda">Resumo de {{ mes_nome }}</p>
+
+<div class="acoes">
+  <a class="botao botao-recebi" href="{% url 'recebi' %}">Recebi</a>
+  <a class="botao botao-gastei" href="{% url 'gastei' %}">Gastei</a>
+</div>
+
+{% if saldo_negativo %}
+<p class="alerta alerta-perigo" role="alert">
+  <span aria-hidden="true">&#9888;</span>
+  <span><strong>Saldo negativo:</strong> neste mês saiu mais dinheiro do que entrou.</span>
+</p>
+{% endif %}
+
+<section class="blocos" aria-label="Resumo do mês">
+  <div class="bloco">
+    <h2>Receitas</h2>
+    <p class="valor">{{ receitas }}</p>
+  </div>
+  <div class="bloco">
+    <h2>Despesas</h2>
+    <p class="valor">{{ despesas }}</p>
+  </div>
+  <div class="bloco{% if saldo_negativo %} bloco-negativo{% endif %}">
+    <h2>Saldo</h2>
+    <p class="valor">{{ saldo }}</p>
+    {% if saldo_negativo %}<p class="nota"><span aria-hidden="true">&#9888;</span> Saldo negativo</p>{% endif %}
+  </div>
+  <div class="bloco">
+    <h2>Parte de cada um</h2>
+    <p class="valor">{{ parte_1 }}</p>
+    <p class="valor">{{ parte_2 }}</p>
+  </div>
+</section>
+
+<form method="post" action="{% url 'logout' %}" class="sair">
+  {% csrf_token %}
+  <button type="submit" class="botao botao-sair">Sair</button>
+</form>
+{% endblock %}

@@ -1,0 +1,71 @@
+{% load static %}<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block titulo %}Controle Financeiro{% endblock %}</title>
+  <link rel="stylesheet" href="{% static 'financeiro/app.css' %}">
+  <script>
+    /* Aplica o tamanho de texto escolhido antes de desenhar a página. */
+    (function () {
+      try {
+        var nivel = localStorage.getItem("texto-nivel");
+        if (nivel === "1" || nivel === "2") {
+          document.documentElement.setAttribute("data-texto", nivel);
+        }
+      } catch (e) {}
+    })();
+  </script>
+</head>
+<body>
+  <a class="pular" href="#conteudo">Ir para o conteúdo</a>
+
+  <header class="topo">
+    <p class="marca">Controle Financeiro</p>
+    <div class="texto-controle" role="group" aria-label="Tamanho do texto">
+      <button type="button" id="texto-menos" aria-label="Diminuir o texto">A-</button>
+      <button type="button" id="texto-mais" aria-label="Aumentar o texto">A+</button>
+      <span id="texto-nome" class="texto-nome" aria-live="polite">Texto normal</span>
+    </div>
+  </header>
+
+  <main id="conteudo" tabindex="-1">
+    {% if messages %}
+    <div class="mensagens">
+      {% for mensagem in messages %}
+      <p class="alerta {% if mensagem.level_tag == 'success' %}alerta-sucesso{% else %}alerta-perigo{% endif %}" role="status">
+        <span aria-hidden="true">{% if mensagem.level_tag == 'success' %}&#10004;{% else %}&#9888;{% endif %}</span>
+        <span>{{ mensagem }}</span>
+      </p>
+      {% endfor %}
+    </div>
+    {% endif %}
+
+    {% block conteudo %}{% endblock %}
+  </main>
+
+  <script>
+    (function () {
+      var raiz = document.documentElement;
+      var nomes = ["Texto normal", "Texto grande", "Texto extra grande"];
+      var nivel = parseInt(raiz.getAttribute("data-texto") || "0", 10);
+      var rotulo = document.getElementById("texto-nome");
+
+      function aplicar() {
+        if (nivel === 0) { raiz.removeAttribute("data-texto"); }
+        else { raiz.setAttribute("data-texto", String(nivel)); }
+        rotulo.textContent = nomes[nivel];
+        try { localStorage.setItem("texto-nivel", String(nivel)); } catch (e) {}
+      }
+
+      document.getElementById("texto-mais").addEventListener("click", function () {
+        if (nivel < 2) { nivel += 1; aplicar(); }
+      });
+      document.getElementById("texto-menos").addEventListener("click", function () {
+        if (nivel > 0) { nivel -= 1; aplicar(); }
+      });
+      rotulo.textContent = nomes[nivel];
+    })();
+  </script>
+</body>
+</html>
