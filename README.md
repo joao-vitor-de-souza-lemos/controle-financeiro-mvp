@@ -69,6 +69,21 @@ coverage report
 
 A cada push, o GitHub Actions instala as dependências, verifica o projeto e roda os testes com cobertura.
 
+## Publicação (Render e Neon)
+
+O sistema é publicado no Render (serviço web gratuito) com o banco PostgreSQL da Neon.
+
+| Item | Valor |
+|---|---|
+| Build Command | `bash build.sh` |
+| Start Command | `python -m gunicorn config.wsgi:application` |
+| Python | 3.12 (arquivo `.python-version`) |
+| Variáveis de ambiente | `SECRET_KEY`, `DATABASE_URL` e `WEB_CONCURRENCY` |
+
+O `build.sh` instala as dependências, coleta os arquivos estáticos e aplica as migrações a cada publicação. O endereço público é liberado automaticamente pela variável `RENDER_EXTERNAL_HOSTNAME`. Nenhum segredo fica no repositório: o arquivo `.env` está no `.gitignore`.
+
+No plano gratuito, o serviço hiberna após 15 minutos sem acesso e leva cerca de 1 minuto para acordar no primeiro acesso seguinte.
+
 ## Status
 
 Em desenvolvimento. O planejamento, a arquitetura, os requisitos e o protótipo das telas foram definidos nas etapas anteriores do projeto. A implementação segue em incrementos: registros com divisão, painel e acessibilidade (concluídos), histórico e, por último, a reserva de emergência.
