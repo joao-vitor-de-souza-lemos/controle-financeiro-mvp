@@ -1,0 +1,43 @@
+{% extends "financeiro/base.html" %}
+{% block titulo %}{{ titulo }} | Controle Financeiro{% endblock %}
+{% block conteudo %}
+<h1>{{ titulo }}</h1>
+<p class="ajuda">{{ ajuda }}</p>
+
+<form method="post" novalidate>
+  {% csrf_token %}
+  {% if form.non_field_errors %}
+  <div class="alerta alerta-perigo" role="alert">
+    <span aria-hidden="true">&#9888;</span>
+    <ul>
+      {% for erro in form.non_field_errors %}<li>{{ erro }}</li>{% endfor %}
+    </ul>
+  </div>
+  {% endif %}
+
+  {% for campo in campos %}
+  <div class="campo">
+    <label for="{{ campo.id_for_label }}">{{ campo.label }}</label>
+    {{ campo }}
+    {% for erro in campo.errors %}
+    <p class="erro" role="alert"><span aria-hidden="true">&#9888;</span> {{ erro }}</p>
+    {% endfor %}
+  </div>
+  {% endfor %}
+
+  <fieldset class="campo">
+    <legend>{{ opcoes.label }}</legend>
+    <div class="opcoes">
+      {% for opcao in opcoes %}
+      <label class="opcao" for="{{ opcao.id_for_label }}">{{ opcao.tag }}<span>{{ opcao.choice_label }}</span></label>
+      {% endfor %}
+    </div>
+    {% for erro in opcoes.errors %}
+    <p class="erro" role="alert"><span aria-hidden="true">&#9888;</span> {{ erro }}</p>
+    {% endfor %}
+  </fieldset>
+
+  <button type="submit" class="botao botao-salvar">Salvar</button>
+  <a class="voltar" href="{% url 'painel' %}">Voltar ao painel</a>
+</form>
+{% endblock %}
