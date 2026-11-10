@@ -34,6 +34,12 @@ CSRF_TRUSTED_ORIGINS = [
     if origem.strip()
 ]
 
+# O Render informa o endereço público do serviço nesta variável.
+RENDER_EXTERNAL_HOSTNAME = os.environ.get("RENDER_EXTERNAL_HOSTNAME")
+if RENDER_EXTERNAL_HOSTNAME:
+    ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
+    CSRF_TRUSTED_ORIGINS.append(f"https://{RENDER_EXTERNAL_HOSTNAME}")
+
 INSTALLED_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",
@@ -77,7 +83,11 @@ WSGI_APPLICATION = "config.wsgi.application"
 # Banco de dados: PostgreSQL (Neon) quando DATABASE_URL existe; SQLite local caso contrário.
 DATABASE_URL = os.environ.get("DATABASE_URL")
 if DATABASE_URL:
-    DATABASES = {"default": dj_database_url.parse(DATABASE_URL, conn_max_age=600)}
+    DATABASES = {
+        "default": dj_database_url.parse(
+            DATABASE_URL, conn_max_age=600, conn_health_checks=True
+        )
+    }
 else:
     DATABASES = {
         "default": {

@@ -1,0 +1,2 @@
+# Garante finais de linha LF nos scripts de shell (o Render roda no Linux).
+*.sh text eol=lf
