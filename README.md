@@ -2,6 +2,7 @@
 
 Aplicação web simples de controle financeiro para uma microempresa familiar de corte de tecido e enfesto em Itaquera, São Paulo. Projeto da disciplina de Projeto de Software (Ciência da Computação, UNICID), ligado ao ODS 8 da ONU (Trabalho Decente e Crescimento Econômico).
 
+![CI](https://github.com/joao-vitor-de-souza-lemos/controle-financeiro-mvp/actions/workflows/ci.yml/badge.svg)
 ![Status](https://img.shields.io/badge/status-em%20desenvolvimento-yellow)
 ![Python](https://img.shields.io/badge/Python-3.12-blue)
 ![Django](https://img.shields.io/badge/Django-5.2%20LTS-092E20)
@@ -13,15 +14,18 @@ A microempresa parceira (Vagner Hermogenes de Souza e o filho, os dois únicos t
 
 O MVP resolve essa dor com registros em poucos toques, pensados para o celular Android que os dois já usam.
 
-## Funcionalidades do MVP
+## Funcionalidades
 
-- Login simples para os dois usuários
+Já implementadas:
+
+- Login e saída, com acesso protegido por usuário e senha (hash Argon2, mínimo de 10 caracteres)
 - Registro de recebimentos (botão **Recebi**): data, cliente, valor e forma de pagamento (Pix ou dinheiro)
-- Registro de despesas (botão **Gastei**): data, descrição, categoria e valor
-- Divisão automática meio a meio de cada recebimento
+- Registro de despesas (botão **Gastei**): data, descrição, categoria (contas do local, manutenção ou imprevistos) e valor
+- Divisão automática meio a meio de cada recebimento, com o centavo ímpar sempre na mesma parte
 - Painel mensal com receitas, despesas, saldo e parte de cada um
-- Histórico de lançamentos com filtro por mês
-- Reserva de emergência com meta (funcionalidade desejável)
+- Acessibilidade: botões de no mínimo 44 por 44 pixels, texto de no mínimo 16 pixels, ajuste do tamanho do texto (A- e A+), erro junto ao campo e alerta de saldo negativo com sinal, símbolo e texto
+
+Próximos incrementos: histórico de lançamentos com filtro por mês e reserva de emergência com meta (desejável).
 
 ## Tecnologias
 
@@ -29,18 +33,45 @@ O MVP resolve essa dor com registros em poucos toques, pensados para o celular A
 |---|---|
 | Linguagem | Python 3.12 |
 | Framework web | Django 5.2 LTS (padrão MVT, com camada de Services) |
-| Banco de dados | PostgreSQL 17 (Neon) |
-| Interface | Templates Django com Bootstrap 5.3, mobile first |
+| Banco de dados | PostgreSQL 17 (Neon); SQLite no desenvolvimento local |
+| Interface | Templates Django com CSS próprio, mobile first |
 | Segurança | Hash de senha Argon2, proteção CSRF, consultas parametrizadas pelo ORM |
 | Publicação | Gunicorn, WhiteNoise e Render |
+| Qualidade | Testes automatizados (unitários e de integração), cobertura com coverage e CI no GitHub Actions |
 
 ## Arquitetura
 
 Monolito em camadas: Templates (apresentação), Views (controle), Services (regras de negócio) e Models (persistência). A regra de divisão e o cálculo do saldo ficam em um único ponto, a camada de Services.
 
+## Como executar localmente
+
+```
+git clone https://github.com/joao-vitor-de-souza-lemos/controle-financeiro-mvp.git
+cd controle-financeiro-mvp
+python -m venv .venv
+.venv\Scripts\Activate.ps1        # Windows (PowerShell). No Linux/macOS: source .venv/bin/activate
+pip install -r requirements.txt
+copy .env.example .env            # Linux/macOS: cp .env.example .env
+python manage.py migrate
+python manage.py createsuperuser  # informe usuário, nome e uma senha com 10 ou mais caracteres
+python manage.py runserver
+```
+
+Abra http://127.0.0.1:8000/ e entre com o usuário criado.
+
+## Testes e cobertura
+
+```
+python manage.py test
+coverage run --source=financeiro,config --omit="*/migrations/*,*/tests/*,*/wsgi.py,*/asgi.py" manage.py test
+coverage report
+```
+
+A cada push, o GitHub Actions instala as dependências, verifica o projeto e roda os testes com cobertura.
+
 ## Status
 
-Em desenvolvimento. O planejamento, a arquitetura, os requisitos e o protótipo das telas já foram definidos nas etapas anteriores do projeto. A implementação segue em incrementos: registros com divisão, painel e histórico, e por último a reserva de emergência.
+Em desenvolvimento. O planejamento, a arquitetura, os requisitos e o protótipo das telas foram definidos nas etapas anteriores do projeto. A implementação segue em incrementos: registros com divisão, painel e acessibilidade (concluídos), histórico e, por último, a reserva de emergência.
 
 ## Autor
 
