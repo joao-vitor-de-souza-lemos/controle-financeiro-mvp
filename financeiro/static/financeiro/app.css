@@ -114,6 +114,7 @@ input[type="text"], input[type="password"], input[type="date"] {
 .alerta ul { margin: 0; padding-left: 1.25rem; }
 .alerta-sucesso { background: #e7f5ec; border-color: var(--recebi); color: #0f4a2e; }
 .alerta-perigo { background: #fdecee; border-color: var(--gastei); color: #6b1019; }
+.dica { margin: 0.25rem 0 0; color: var(--neutro); }
 .erro { margin: 0.25rem 0 0; color: #8a1c27; font-weight: 600; }
 .mensagens { margin-bottom: 0.5rem; }
 
