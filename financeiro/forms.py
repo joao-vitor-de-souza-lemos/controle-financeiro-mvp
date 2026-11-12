@@ -23,8 +23,14 @@ class _FormularioLancamento(forms.Form):
     valor = forms.CharField(
         label="Valor (R$)",
         max_length=14,
+        help_text="Pode digitar com ou sem vírgula: 480 ou 480,00.",
         widget=forms.TextInput(
-            attrs={"inputmode": "decimal", "autocomplete": "off", "placeholder": "Ex.: 480,00"}
+            attrs={
+                "inputmode": "decimal",
+                "autocomplete": "off",
+                "placeholder": "Ex.: 480,00",
+                "aria-describedby": "dica-valor",
+            }
         ),
         error_messages=OBRIGATORIO,
     )
