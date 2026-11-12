@@ -115,6 +115,15 @@ class RecebiTests(TestCase):
         self.assertContains(resposta, "Pix")
         self.assertContains(resposta, "Dinheiro")
 
+    def test_campo_valor_mostra_dica_fixa_sobre_a_virgula(self):
+        resposta = self.client.get(reverse("recebi"))
+        self.assertContains(resposta, "Pode digitar com ou sem vírgula: 480 ou 480,00.")
+        self.assertContains(resposta, 'aria-describedby="dica-valor"')
+
+    def test_valor_sem_virgula_e_aceito(self):
+        self.client.post(reverse("recebi"), self._dados(valor="480"))
+        self.assertEqual(Recebimento.objects.get().valor_centavos, 48000)
+
     def test_salvar_grava_e_mostra_a_metade_de_cada_um(self):
         resposta = self.client.post(reverse("recebi"), self._dados(), follow=True)
         self.assertEqual(Recebimento.objects.count(), 1)
@@ -163,6 +172,10 @@ class GasteiTests(TestCase):
         resposta = self.client.get(reverse("gastei"))
         for texto in ("Contas do local", "Manutenção", "Imprevistos"):
             self.assertContains(resposta, texto)
+
+    def test_campo_valor_mostra_dica_fixa_sobre_a_virgula(self):
+        resposta = self.client.get(reverse("gastei"))
+        self.assertContains(resposta, "Pode digitar com ou sem vírgula: 480 ou 480,00.")
 
     def test_salvar_grava_e_confirma(self):
         resposta = self.client.post(reverse("gastei"), self._dados(), follow=True)
